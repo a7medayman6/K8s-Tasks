@@ -1,0 +1,44 @@
+# create k8s deployment with 1 replica from the image reject-nginx-custom-controller
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reject-nginx-custom-controller
+  labels:
+    app: reject-nginx-custom-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reject-nginx-custom-controller
+  template:
+    metadata:
+      labels:
+        app: reject-nginx-custom-controller
+    spec:
+      containers:
+      - name: reject-nginx-custom-controller
+        image: a7medayman6/reject-nginx-custom-controller
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3000
+---
+# Create a service that exposes the deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: reject-nginx-custom-controller
+spec:
+  type: NodePort
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: reject-nginx-custom-controller

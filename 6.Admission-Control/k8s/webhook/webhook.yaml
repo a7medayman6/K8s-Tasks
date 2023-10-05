@@ -1,0 +1,16 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: reject-nginx
+webhooks:
+- name: reject-nginx
+  rules:
+    - apiGroups: [""]
+      apiVersions: ["v1"]
+      operations:  ["CREATE"]
+      resources:   ["pods"]
+  failurePolicy: Ignore
+  clientConfig:
+    url: "https://10.244.0.6:3000/api/rejectNginx"
+  admissionReviewVersions: ["v1"]
+  sideEffects: None
